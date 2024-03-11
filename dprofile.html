@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Discord Profile Card</title>
+        <script src="https://kit.fontawesome.com/19746ffdef.js" crossorigin="anonymous"></script>
+  
+        <link rel="stylesheet" href="./assets/css/activity.css">
+        <link rel="stylesheet" href="./assets/css/style.css" />
+        <script src="./assets/javascripts/lanyard.js"></script>
+        <script src="./assets/javascripts/activity.js"></script>
+        <!--J query-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"> </script>
+  </head>
+  <body>
+
+
+    <div class="card-container">
+      <div class="card">
+        <div class="card-header">
+          <div id="discorduser.banner"></div>
+          <div class="infos">
+            <div id="discorduser.avatarlink"></div>
+            <div class="status-container">
+              <div id="discorduser.desktop"></div>
+              <div id="discorduser.mobile"></div>
+              <div id="discorduser.web"></div>
+              <div id="discorduser.spotify"></div>
+            </div>
+            <div class="badges-container" id="badge-containor"></div>
+            <div class="username" id="discorduser.name"></div>
+            <hr>
+          </div>
+        </div>
+        
+        <div class="card-content">
+          <div class="card-status">
+            <span id="discorduser.emoji"></span><span id="discorduser.status"></span>
+          <hr>
+          </div>
+          <div class="about-me">
+            <div class="category-title" id="abtme-title">About Me</div>
+            <p id="discorduser.aboutme"></p>
+          </div>
+          <div class="roles">
+            <div class="category-title" id="roles-title">Roles</div>
+            <div class="roles-list" id="role-list"></div>
+          </div>
+          <div class="roles">
+            <div class="category-title" id="activity-title">Activity</div>
+            <div id="activitycard">
+              <div id="activities" width="100%"></div>
+            </div>
+          </div>
+          <div class="note" id="note">
+            <div class="category-title">Note</div>
+            <textarea placeholder="Tap to add a note"></textarea>
+          </div>
+        </div>
+
+        <div class="card-footer" id="card-footer">
+            <input type="text" autocomplete="off" name="content" id="content" placeholder="Send message" />
+        </div>
+      </div>
+      <input type="hidden" id="update_frequency" type="range" min="1" max="10" value="5">
+    </div>
+
+
+
+    <script>
+    var rolelist = "";
+    var badgelist = "";
+
+          const urlParams = new URLSearchParams(window.location.search);
+          const userID = urlParams.get('uid');
+
+          
+          if (urlParams.get('badges') != undefined){
+          if (urlParams.get('badges').includes("brilliance")) {
+            badgelist += '<div class="badge-item"><img src="./assets/img/badges/brilliance.png" alt="" /><div class="tooltip tooltip-up">HypeSquad Brilliance</div></div>';
+          };
+          if (urlParams.get('badges').includes("bravery")) {
+            badgelist += '<div class="badge-item"><img src="./assets/img/badges/bravery.webp" alt="" /><div class="tooltip tooltip-up">HypeSquad Bravery</div></div>';
+          };
+          if (urlParams.get('badges').includes("activedeveloper")) {
+            badgelist += '<div class="badge-item"><img src="./assets/img/badges/activedev.png" alt="" /><div class="tooltip tooltip-up">Active Developer</div></div>';
+          };
+          if (urlParams.get('badges').includes("nitrosubscriber")) {
+            badgelist += '<div class="badge-item"><img src="./assets/img/badges/nitro.webp" alt="" /><div class="tooltip tooltip-up">Nitro Subscriber</div></div>';
+          };
+          if (urlParams.get('badges').includes("boosting")) {
+            badgelist += '<div class="badge-item"><img src="./assets/img/badges/boost.webp" alt="" /><div class="tooltip tooltip-up">Server Booster</div></div>';
+          };
+          if (urlParams.get('badges').includes("earlyverifiedbotdeveloper")) {
+            badgelist += '<div class="badge-item"><img src="./assets/img/badges/devbot.webp" alt="" /><div class="tooltip tooltip-up">Verified Bot Developer</div></div>';
+          };
+          if (urlParams.get('badges').includes("earlysupporter")) {
+            badgelist += '<div class="badge-item"><img src="./assets/img/badges/firsttimenitro.webp" alt="" /><div class="tooltip tooltip-up">Early Supporter</div></div>';
+          };
+          if (urlParams.get('badges').includes("bughunter")) {
+            badgelist += '<div class="badge-item"><img src="./assets/img/badges/megabughunter.webp" alt="" /><div class="tooltip tooltip-up">Bug Hunter</div></div>';
+          };
+          if (urlParams.get('badges').includes("partneredserverowner")) {
+            badgelist += '<div class="badge-item"><img src="./assets/img/badges/partner.webp" alt="" /><div class="tooltip tooltip-up">Partnered Server Owner</div></div>';
+          };
+          if (urlParams.get('badges').includes("certifiedmoderator")) {
+            badgelist += '<div class="badge-item"><img src="./assets/img/badges/moderator.webp" alt="" /><div class="tooltip tooltip-up">Certified Moderator</div></div>';
+          };
+          if (urlParams.get('badges').includes("hypesquadevents")) {
+            badgelist += '<div class="badge-item"><img src="./assets/img/badges/eventcreator.webp" alt="" /><div class="tooltip tooltip-up">Hypesquad Events</div></div>';
+          };
+          if (urlParams.get('badges').includes("discordstaff")) {
+            badgelist += '<div class="badge-item"><img src="./assets/img/badges/team.webp" alt="" /><div class="tooltip tooltip-up">Discord Staff</div></div>';
+          };
+        }
+
+          if (urlParams.get('roles') != undefined){
+          allroles = urlParams.get('roles').split(",");
+
+          for (var i = 0; i < allroles.length; i++) {
+            var roledata = allroles[i].split(":");
+            rolelist += '<div class="role"><div class="color" style="background:#' + roledata[0] + '"></div>' + roledata[1] + '</div>';
+          };
+          }
+
+
+          
+          if (userID != undefined){
+            document.getElementById("discorduser.aboutme").innerHTML= urlParams.get('aboutme');
+            document.getElementById('role-list').innerHTML = rolelist;
+            document.getElementById('badge-containor').innerHTML = badgelist;
+            document.getElementById("discorduser.banner").innerHTML = "<div class='banner-image' style='background: url(\"https://dcdn.dstn.to/banners/" + userID + "\")'></div>";
+            document.getElementById("discorduser.avatarlink").innerHTML = '<a href="https://discord.com/users/' + userID + '" target="_blank"><div id="discorduser.avatar" class="profil-logo"><img src="https://dcdn.dstn.to/avatars/' + userID + '" /></div></a>';
+            document.getElementById("discorduser.name").innerHTML= "Loading<span style='font-weight:300;'>...</span>";
+            fetch("https://api.lanyard.rest/v1/users/" + userID)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("discorduser.name").innerHTML=`${data.data.discord_user.username}`;
+                // document.getElementById("discorduser.name").innerHTML=`${data.data.discord_user.username}<span>#${data.data.discord_user.discriminator}</span>`;
+                document.getElementById("content").placeholder=`Send Message to ${data.data.discord_user.username}`;
+                
+              
+                if (data.data.active_on_discord_desktop) {
+                  document.getElementById("discorduser.desktop").innerHTML=`<div class="status-item"><i style="color:` + (data.data.discord_status === `online` ? `#3ba55d` : (data.data.discord_status === `idle` ? `#faa81a` : `#3ba55d` )) + `;" class="fa-solid fa-display"></i>
+                <div class="tooltip tooltip-up">` + (data.data.discord_status === `online` ? `Online` : (data.data.discord_status === `idle` ? `Idle` : `DND` )) + ` on Desktop</div></div>`;
+                }
+
+                if (data.data.active_on_discord_mobile) {
+                  document.getElementById("discorduser.mobile").innerHTML=`<div class="status-item"><i style="color:` + (data.data.discord_status === `online` ? `#3ba55d` : (data.data.discord_status === `idle` ? `#faa81a` : `#3ba55d` )) + `;" class="fa-solid fa-mobile"></i>
+                <div class="tooltip tooltip-up">` + (data.data.discord_status === `online` ? `Online` : (data.data.discord_status === `idle` ? `Idle` : `DND` )) + ` on Mobile</div></div>`;
+                }
+
+                if (data.data.active_on_discord_web) {
+                  document.getElementById("discorduser.web").innerHTML=`<div class="status-item"><i style="color:` + (data.data.discord_status === `online` ? `#3ba55d` : (data.data.discord_status === `idle` ? `#faa81a` : `#3ba55d` )) + `;" class="fa-solid fa-globe"></i>
+                <div class="tooltip tooltip-up">` + (data.data.discord_status === `online` ? `Online` : (data.data.discord_status === `idle` ? `Idle` : `DND` )) + ` on Browser</div></div>`;
+                }
+
+
+              if (data.data.discord_status === `offline`) {
+                  document.getElementById("discorduser.desktop").innerHTML=`<div class="status-item"><i style="color:#747f8d;" class="fa-solid fa-circle"></i>
+                <div class="tooltip tooltip-up">Offline</div></div>`;
+              }
+              
+
+              if (data.data.listening_to_spotify) {
+                document.getElementById("discorduser.spotify").innerHTML=`<div class="status-item"><i style="font-size: 13px; color:#1ed760;" class="fa-brands fa-spotify"></i>
+                <div class="tooltip tooltip-up">Listening to Spotify</div></div>`;
+              }
+
+              if (data.data.activities[0].id === `custom`) {
+                  document.getElementById("discorduser.status").innerHTML=(data.data.activities[0].state == undefined ? `` : data.data.activities[0].state ) + `<br><br>`;
+                  if (data.data.activities[0].emoji.animated === false) {
+                      document.getElementById("discorduser.emoji").innerHTML=`<img src="https://cdn.discordapp.com/emojis/${data.data.activities[0].emoji.id}.webp" width="15"> `;
+                  } else if (data.data.activities[0].emoji.animated === true) {
+                      document.getElementById("discorduser.emoji").innerHTML=`<img src="https://cdn.discordapp.com/emojis/${data.data.activities[0].emoji.id}.gif?size=40" width="15"> `;
+                  } else {
+                      document.getElementById("discorduser.emoji").innerHTML=`${data.data.activities[0].emoji.name} `;
+                  }
+              }
+
+                })
+
+
+                updatepresence(userID);
+                
+      var i = 1;
+      function loop() {
+          setTimeout(function() {
+              updatepresence(userID);
+              
+              i++;
+              if (i < 500) {
+                  loop();
+              }
+          }, 1000 * document.getElementById('update_frequency').value)
+      }
+
+      loop();
+
+          } else {
+            document.getElementById("discorduser.name").innerHTML= "<span>baseURL</span>?uid=the goddamn ID";
+            document.getElementById("abtme-title").innerHTML= "To Add About Me";
+            document.getElementById("discorduser.aboutme").innerHTML= "<b style='color:#8f8f8f'>Add <b style='color:white'>&aboutme=I am dumb</b> to the URL</b>";
+            document.getElementById("roles-title").innerHTML= "To add Roles";
+            document.getElementById('role-list').innerHTML = "<b style='color:#8f8f8f;font-size: 0.9rem;'>Add <b style='color:white'>&roles=hex:Role_name,hex:Role2_name,...</b> to the URL, NOTE : hex is without '#' and separate each array of roles with single ','</b>";
+            document.getElementById("activity-title").innerHTML= "To Add Badges";
+            document.getElementById('activitycard').innerHTML = "<b style='color:#8f8f8f;font-size: 0.9rem;'>Add <b style='color:white'>&badges=brilliance, nitrosubscriber, boosting...</b> to the URL, Available Badges : brilliance, bravery, boosting, nitrosubscriber, activedeveloper, certifiedmoderator, earlyverifiedbotdeveloper, discordstaff, bughunter, partneredserverowner, earlysupporter, hypesquadevents</b>";
+            document.getElementById("card-footer").innerHTML= "";
+            document.getElementById("note").innerHTML= "";
+          }
+             
+
+          
+        
+
+      
+
+    </script>
+
+  </body>
+</html>
